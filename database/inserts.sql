@@ -1,8 +1,3 @@
--- =====================================================================
--- Proyecto Final - Base de Datos I
--- Datos de prueba (Inserts) - Sistema de Tarjetas de Circulación
--- =====================================================================
-
 -- ---------------------------------------------------------------------
 -- MARCAS
 -- ---------------------------------------------------------------------
@@ -90,11 +85,6 @@ INSERT INTO vehiculo (anio, color, numero_motor, numero_chasis, numero_placa, ti
 (2014, 'Blanco',  'MOT-NIS-002', 'CHAS-NIS-002', 'P-357NOP', 'Particular', 10, 1),
 (2024, 'Negro',   'MOT-TOY-004', 'CHAS-TOY-004', 'O-468QRS', 'Oficial',    4, 4);
 
--- ---------------------------------------------------------------------
--- RELACIÓN PROPIETARIO - VEHÍCULO (muchos a muchos)
--- Cada vehículo tiene un propietario actual.
--- También se registran cambios de dueño en el histórico.
--- ---------------------------------------------------------------------
 -- Propietarios actuales
 INSERT INTO vehiculo_propietario (id_vehiculo, id_propietario, fecha_inicio, fecha_fin, es_actual) VALUES
 (1,  1,  '2020-03-15', NULL, TRUE),
@@ -114,7 +104,7 @@ INSERT INTO vehiculo_propietario (id_vehiculo, id_propietario, fecha_inicio, fec
 (15, 7,  '2024-01-15', NULL, TRUE);
 
 -- Casos de cambio de dueño (registros históricos)
--- Vehículo 1 perteneció antes a María Fernanda
+
 INSERT INTO vehiculo_propietario (id_vehiculo, id_propietario, fecha_inicio, fecha_fin, es_actual) VALUES
 (1, 2,  '2018-01-10', '2020-03-14', FALSE),
 (4, 11, '2017-06-01', '2019-05-17', FALSE),
@@ -122,7 +112,6 @@ INSERT INTO vehiculo_propietario (id_vehiculo, id_propietario, fecha_inicio, fec
 
 -- ---------------------------------------------------------------------
 -- TARJETAS DE CIRCULACIÓN
--- Incluye casos: ACTIVA, VENCIDA, DESACTIVADA por impago
 -- ---------------------------------------------------------------------
 INSERT INTO tarjeta_circulacion (fecha_emision, fecha_vencimiento, estado, motivo_desactivacion, id_vehiculo, id_usuario) VALUES
 ('2024-03-15', '2027-03-15', 'ACTIVA',      NULL, 1, 1),
@@ -176,9 +165,3 @@ INSERT INTO historial_cambio_motor (id_vehiculo, motor_anterior, motor_nuevo, ob
 (2, 'MOT-TOY-002-OLD', 'MOT-TOY-002', 'Cambio por daño irreparable del motor original'),
 (6, 'MOT-HYU-001-OLD', 'MOT-HYU-001', 'Reemplazo planificado por alto kilometraje');
 
--- =====================================================================
--- Verificación rápida
--- =====================================================================
--- SELECT 'propietarios' AS tabla, COUNT(*) FROM propietario
--- UNION ALL SELECT 'vehiculos',  COUNT(*) FROM vehiculo
--- UNION ALL SELECT 'tarjetas',   COUNT(*) FROM tarjeta_circulacion;
