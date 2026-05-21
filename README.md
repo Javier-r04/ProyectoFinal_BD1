@@ -1,5 +1,10 @@
 # Proyecto Final - Base de Datos I
 ## Sistema de Tarjetas de Circulación Vehicular (SAT - Guatemala)
+Aplicación cliente-servidor que simula el sistema de tarjetas de circulación
+vehicular de la SAT de Guatemala. Permite consultar, registrar, modificar
+y desactivar tarjetas, así como llevar el control de cambios de dueño,
+cambios de color y cambios de motor de los vehículos.
+---
 
 **Autor:** José Javier Rodríguez Alvarado - 1535524
 **Curso:** Base de Datos I
@@ -8,16 +13,7 @@
 
 ---
 
-## 📋 Descripción
-
-Aplicación cliente-servidor que simula el sistema de tarjetas de circulación
-vehicular de la SAT de Guatemala. Permite consultar, registrar, modificar
-y desactivar tarjetas, así como llevar el control de cambios de dueño,
-cambios de color y cambios de motor de los vehículos.
-
----
-
-## 🛠️ Tecnologías utilizadas
+##  Tecnologías utilizadas
 
 | Capa        | Tecnología                       |
 |-------------|----------------------------------|
@@ -30,7 +26,7 @@ cambios de color y cambios de motor de los vehículos.
 
 ---
 
-## 📂 Estructura del repositorio
+##  Estructura del repositorio
 
 ```
 proyecto_bd1/
@@ -56,15 +52,15 @@ proyecto_bd1/
 
 ---
 
-## ⚙️ Instalación y ejecución
+##  Instalación y ejecución
 
-### 1️⃣ Requisitos previos
+###  Requisitos previos
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - [Python 3.11+](https://www.python.org/)
 - [DataGrip](https://www.jetbrains.com/datagrip/) (opcional, para administrar la BD)
 
-### 2️⃣ Levantar la base de datos en Docker
+###  Levantar la base de datos en Docker
 
 Desde la raíz del proyecto:
 
@@ -82,7 +78,7 @@ Verificar que esté corriendo:
 docker ps
 ```
 
-### 3️⃣ Conectarse desde DataGrip
+###  Conectarse desde DataGrip
 
 1. **New → Data Source → PostgreSQL**
 2. Llenar los datos:
@@ -96,7 +92,7 @@ docker ps
 > Si la BD no tiene datos, ejecuta manualmente `database/schema.sql` y
 > luego `database/inserts.sql` desde DataGrip.
 
-### 4️⃣ Levantar el backend (Python + Flask)
+###  Levantar el backend (Python + Flask)
 
 ```bash
 cd backend
@@ -107,7 +103,7 @@ python app.py
 
 El servidor queda escuchando en `http://localhost:5000`.
 
-### 5️⃣ Abrir la aplicación
+###  Abrir la aplicación
 
 Abrir el navegador en:
 
@@ -119,7 +115,7 @@ http://localhost:5000
 
 ---
 
-## 🔑 Credenciales y configuración
+##  Credenciales y configuración
 
 | Parámetro       | Valor                  |
 |-----------------|------------------------|
@@ -135,23 +131,23 @@ http://localhost:5000
 
 ---
 
-## 🚀 Funcionalidades de la aplicación
+##  Funcionalidades de la aplicación
 
-- ✅ **Dashboard** con estadísticas en tiempo real.
-- ✅ **Consultar** tarjetas de circulación por placa, propietario, DPI o chasis.
-- ✅ **Filtrar** por estado (Activa / Vencida / Desactivada / Impago).
-- ✅ **Registrar** una nueva tarjeta (crea el vehículo, asigna propietario,
+-  **Dashboard** con estadísticas en tiempo real.
+-  **Consultar** tarjetas de circulación por placa, propietario, DPI o chasis.
+-  **Filtrar** por estado (Activa / Vencida / Desactivada / Impago).
+-  **Registrar** una nueva tarjeta (crea el vehículo, asigna propietario,
   emite calcomanía).
-- ✅ **Modificar** información de un vehículo.
-- ✅ **Cambio de dueño** con histórico.
-- ✅ **Cambio de color** con histórico.
-- ✅ **Cambio de motor** con histórico.
-- ✅ **Desactivar tarjeta** por vencimiento o impago.
-- ✅ **Vista detallada** con historial completo de cada vehículo.
+-  **Modificar** información de un vehículo.
+-  **Cambio de dueño** con histórico.
+-  **Cambio de color** con histórico.
+-  **Cambio de motor** con histórico.
+-  **Desactivar tarjeta** por vencimiento o impago.
+-  **Vista detallada** con historial completo de cada vehículo.
 
 ---
 
-## 🔄 Correcciones respecto a la Fase 1
+## Correcciones respecto a la Fase 1
 
 1. **Eliminación de la entidad `Placa`** – Sus atributos (`numero_placa`,
    `tipo_placa`) se trasladaron como columnas de la entidad `Vehiculo`,
@@ -169,7 +165,7 @@ http://localhost:5000
 
 ---
 
-## 🧪 Demostración en PostgreSQL
+##  Demostración en PostgreSQL
 
 El archivo `database/consultas_demo.sql` contiene ejemplos de:
 
@@ -190,7 +186,7 @@ psql -h localhost -U postgres -d tarjetas_circulacion -f database/consultas_demo
 
 ---
 
-## 🐛 Solución de problemas
+##  Solución de problemas
 
 | Problema | Solución |
 |----------|----------|
@@ -202,7 +198,7 @@ psql -h localhost -U postgres -d tarjetas_circulacion -f database/consultas_demo
 
 ---
 
-## 📦 Reset completo de la base de datos
+##  Reset completo de la base de datos
 
 ```bash
 docker compose down -v
