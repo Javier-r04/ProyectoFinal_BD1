@@ -1,12 +1,6 @@
 # Proyecto Final - Base de Datos I
 ## Sistema de Tarjetas de Circulación Vehicular (SAT - Guatemala)
 
-Aplicación cliente-servidor que simula el sistema de tarjetas de circulación
-vehicular de la SAT de Guatemala. Permite consultar, registrar, modificar
-y desactivar tarjetas, así como llevar el control de cambios de dueño,
-cambios de color y cambios de motor de los vehículos.
----
-
 **Autor:** José Javier Rodríguez Alvarado - 1535524
 **Curso:** Base de Datos I
 **Docente:** Ing. Manuel Rojas
@@ -14,7 +8,16 @@ cambios de color y cambios de motor de los vehículos.
 
 ---
 
-##  Tecnologías utilizadas
+## Descripción
+
+Aplicación cliente-servidor que simula el sistema de tarjetas de circulación
+vehicular de la SAT de Guatemala. Permite consultar, registrar, modificar
+y desactivar tarjetas, así como llevar el control de cambios de dueño,
+cambios de color y cambios de motor de los vehículos.
+
+---
+
+## Tecnologías utilizadas
 
 | Capa        | Tecnología                       |
 |-------------|----------------------------------|
@@ -148,7 +151,7 @@ http://localhost:5000
 
 ---
 
-## Correcciones respecto a la Fase 1
+##  Correcciones respecto a la Fase 1
 
 1. **Eliminación de la entidad `Placa`** – Sus atributos (`numero_placa`,
    `tipo_placa`) se trasladaron como columnas de la entidad `Vehiculo`,
