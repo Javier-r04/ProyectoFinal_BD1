@@ -1,17 +1,3 @@
--- =====================================================================
--- Proyecto Final - Base de Datos I
--- Sistema de Tarjetas de Circulación Vehicular (SAT - Guatemala)
--- Autor: José Javier Rodríguez Alvarado - 1535524
--- =====================================================================
--- Correcciones aplicadas respecto a la Fase 1:
---   1. Se eliminó la entidad "Placa" y sus atributos (numero_placa, 
---      tipo_placa) se trasladaron como columnas de la entidad Vehículo.
---   2. La relación Propietario - Vehículo pasó a ser de muchos a muchos
---      mediante la tabla intermedia "Vehiculo_Propietario", la cual
---      también permite registrar el histórico de cambios de dueño.
---   3. Se agregaron timestamps de auditoría y campos para registrar los
---      casos de cambio de color y cambio de motor.
--- =====================================================================
 
 -- Eliminar tablas si existen (en orden inverso por FK)
 DROP TABLE IF EXISTS historial_cambio_motor CASCADE;
@@ -28,7 +14,6 @@ DROP TABLE IF EXISTS propietario CASCADE;
 
 -- =====================================================================
 -- TABLA: propietario
--- Representa a la persona legalmente dueña del vehículo.
 -- =====================================================================
 CREATE TABLE propietario (
     id_propietario  SERIAL PRIMARY KEY,
@@ -42,7 +27,6 @@ CREATE TABLE propietario (
 
 -- =====================================================================
 -- TABLA: marca
--- Representa la empresa encargada de fabricar el vehículo.
 -- =====================================================================
 CREATE TABLE marca (
     id_marca     SERIAL PRIMARY KEY,
@@ -51,7 +35,6 @@ CREATE TABLE marca (
 
 -- =====================================================================
 -- TABLA: modelo
--- Representa la línea del vehículo según su marca.
 -- =====================================================================
 CREATE TABLE modelo (
     id_modelo     SERIAL PRIMARY KEY,
@@ -64,7 +47,6 @@ CREATE TABLE modelo (
 
 -- =====================================================================
 -- TABLA: tipo_uso
--- Clasificación del vehículo: particular, comercial, público, oficial...
 -- =====================================================================
 CREATE TABLE tipo_uso (
     id_tipo_uso SERIAL PRIMARY KEY,
@@ -73,8 +55,6 @@ CREATE TABLE tipo_uso (
 
 -- =====================================================================
 -- TABLA: vehiculo
--- Representa el vehículo registrado en el sistema.
--- Incluye los atributos numero_placa y tipo_placa (antes en tabla Placa).
 -- =====================================================================
 CREATE TABLE vehiculo (
     id_vehiculo    SERIAL PRIMARY KEY,
@@ -99,9 +79,7 @@ CREATE TABLE vehiculo (
 );
 
 -- =====================================================================
--- TABLA: vehiculo_propietario  (Relación muchos a muchos)
--- Registra qué propietario(s) tiene un vehículo en el tiempo.
--- Permite además mantener el historial de cambios de dueño.
+-- TABLA: vehiculo_propietario 
 -- =====================================================================
 CREATE TABLE vehiculo_propietario (
     id_vehiculo_propietario SERIAL PRIMARY KEY,
@@ -120,7 +98,6 @@ CREATE INDEX idx_vp_actual ON vehiculo_propietario(id_vehiculo, es_actual);
 
 -- =====================================================================
 -- TABLA: usuario
--- Representa al usuario en la red de la SAT que registra un vehículo.
 -- =====================================================================
 CREATE TABLE usuario (
     id_usuario  SERIAL PRIMARY KEY,
@@ -132,8 +109,6 @@ CREATE TABLE usuario (
 
 -- =====================================================================
 -- TABLA: tarjeta_circulacion
--- Documento legal que permite al vehículo circular.
--- Estados: ACTIVA, VENCIDA, DESACTIVADA, IMPAGO
 -- =====================================================================
 CREATE TABLE tarjeta_circulacion (
     id_tarjeta        SERIAL PRIMARY KEY,
@@ -155,7 +130,7 @@ CREATE TABLE tarjeta_circulacion (
 
 -- =====================================================================
 -- TABLA: calcomania
--- Control que se posee en el vehículo para su circulación legal.
+
 -- =====================================================================
 CREATE TABLE calcomania (
     id_calcomania SERIAL PRIMARY KEY,
@@ -169,7 +144,6 @@ CREATE TABLE calcomania (
 
 -- =====================================================================
 -- TABLA: historial_cambio_color
--- Registra cada trámite de cambio de color del vehículo.
 -- =====================================================================
 CREATE TABLE historial_cambio_color (
     id_cambio_color SERIAL PRIMARY KEY,
@@ -184,7 +158,6 @@ CREATE TABLE historial_cambio_color (
 
 -- =====================================================================
 -- TABLA: historial_cambio_motor
--- Registra cada trámite de cambio de motor del vehículo.
 -- =====================================================================
 CREATE TABLE historial_cambio_motor (
     id_cambio_motor SERIAL PRIMARY KEY,
@@ -198,7 +171,7 @@ CREATE TABLE historial_cambio_motor (
 );
 
 -- =====================================================================
--- ÍNDICES adicionales para mejorar consultas
+-- ÍNDICES
 -- =====================================================================
 CREATE INDEX idx_vehiculo_placa     ON vehiculo(numero_placa);
 CREATE INDEX idx_tarjeta_estado     ON tarjeta_circulacion(estado);
@@ -207,7 +180,6 @@ CREATE INDEX idx_propietario_dpi    ON propietario(dpi);
 
 -- =====================================================================
 -- VISTA: v_tarjeta_completa
--- Consulta unificada de información de tarjeta de circulación.
 -- =====================================================================
 CREATE OR REPLACE VIEW v_tarjeta_completa AS
 SELECT
