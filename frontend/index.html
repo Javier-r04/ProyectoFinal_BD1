@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Tarjetas de Circulación - SAT</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <h1>🚗 Sistema de Tarjetas de Circulación</h1>
+  <div class="subtitle">Proyecto Final – Base de Datos I &mdash; URL Quetzaltenango</div>
+  <div id="db-status" class="db-status">⏳ Verificando conexión...</div>
+</header>
+
+<nav>
+  <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
+  <button class="tab-btn" data-tab="consultar">🔍 Consultar</button>
+  <button class="tab-btn" data-tab="registrar">➕ Registrar Tarjeta</button>
+  <button class="tab-btn" data-tab="nuevo-propietario">👤 Nuevo Propietario</button>
+  <button class="tab-btn" data-tab="nuevo-vehiculo">🚙 Nuevo Vehículo</button>
+  <button class="tab-btn" data-tab="nueva-calcomania">🏷️ Nueva Calcomanía</button>
+  <button class="tab-btn" data-tab="nueva-marca">🏷️ Nueva Marca</button>
+  <button class="tab-btn" data-tab="nuevo-modelo">🏭 Nuevo Modelo</button>
+  <button class="tab-btn" data-tab="modificar">✏️ Modificar Vehículo</button>
+  <button class="tab-btn" data-tab="cambio-color">🎨 Cambio de Color</button>
+  <button class="tab-btn" data-tab="cambio-motor">⚙️ Cambio de Motor</button>
+  <button class="tab-btn" data-tab="cambio-dueno">👥 Cambio de Dueño</button>
+  <button class="tab-btn" data-tab="desactivar">🚫 Desactivar Tarjeta</button>
+</nav>
+
+<main>
+
+<!-- =================== DASHBOARD =================== -->
+<section id="dashboard" class="tab-content active">
+  <h2>Resumen del sistema</h2>
+  <div id="stats" class="stats-grid"></div>
+
+  <h3>Tarjetas recientes</h3>
+  <div class="table-wrapper">
+    <table id="tbl-recientes">
+      <thead>
+        <tr>
+          <th>ID</th><th>Placa</th><th>Marca/Modelo</th><th>Propietario</th>
+          <th>Vencimiento</th><th>Estado</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- =================== CONSULTAR =================== -->
+<section id="consultar" class="tab-content">
+  <h2>Consultar vehículos y tarjetas de circulación</h2>
+  <p style="color:#718096;font-size:0.9rem;margin-bottom:0.75rem;">
+    Búsqueda por placa, marca, modelo, color, motor, chasis, propietario o DPI.<br>
+    Aparecen TODOS los vehículos: con o sin tarjeta, con o sin propietario.
+  </p>
+  <div class="form-row">
+    <input type="text" id="q-busqueda" placeholder="Ej: Corolla, Toyota, Rojo, P-123ABC, Luisa...">
+    <select id="q-estado">
+      <option value="">Cualquier estado</option>
+      <option value="ACTIVA">Tarjeta ACTIVA</option>
+      <option value="VENCIDA">Tarjeta VENCIDA</option>
+      <option value="DESACTIVADA">Tarjeta DESACTIVADA</option>
+      <option value="IMPAGO">Tarjeta IMPAGO</option>
+      <option value="SIN_TARJETA">Sin tarjeta</option>
+    </select>
+    <button onclick="buscarTarjetas()">Buscar</button>
+  </div>
+  <div class="table-wrapper">
+    <table id="tbl-consulta">
+      <thead>
+        <tr>
+          <th>ID Veh.</th><th>Placa</th><th>Marca</th><th>Modelo</th><th>Año</th>
+          <th>Color</th><th>Propietario</th><th>Tarjeta</th><th>Vencimiento</th><th>Estado</th>
+          <th>Detalle</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Modal de detalle -->
+  <div id="modal-detalle" class="modal hidden">
+    <div class="modal-content">
+      <span class="close" onclick="cerrarModal()">&times;</span>
+      <h3>Detalle de la tarjeta</h3>
+      <div id="detalle-body"></div>
+      <h4>Historial</h4>
+      <div id="historial-body"></div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== REGISTRAR =================== -->
+<section id="registrar" class="tab-content">
+  <h2>Registrar nueva tarjeta de circulación</h2>
+  <form id="form-registrar" onsubmit="registrarTarjeta(event)">
+    <h3>Datos del vehículo</h3>
+    <div class="grid-2">
+      <label>Número de placa
+        <input type="text" name="numero_placa" required maxlength="10">
+      </label>
+      <label>Tipo de placa
+        <select name="tipo_placa" required>
+          <option value="Particular">Particular</option>
+          <option value="Comercial">Comercial</option>
+          <option value="Mercantil">Mercantil</option>
+          <option value="Oficial">Oficial</option>
+          <option value="Diplomática">Diplomática</option>
+          <option value="Alquiler">Alquiler</option>
+          <option value="Moto">Moto</option>
+          <option value="Remolque">Remolque</option>
+        </select>
+      </label>
+      <label>Año
+        <input type="number" name="anio" required min="1900" max="2100" value="2026">
+      </label>
+      <label>Color
+        <input type="text" name="color" required maxlength="30">
+      </label>
+      <label>Número de motor
+        <input type="text" name="numero_motor" required maxlength="50">
+      </label>
+      <label>Número de chasis
+        <input type="text" name="numero_chasis" required maxlength="50">
+      </label>
+      <label>Modelo
+        <select name="id_modelo" id="sel-modelo" required></select>
+      </label>
+      <label>Tipo de uso
+        <select name="id_tipo_uso" id="sel-tipo-uso" required></select>
+      </label>
+    </div>
+
+    <h3>Propietario y usuario SAT</h3>
+    <div class="grid-2">
+      <label>Propietario
+        <select name="id_propietario" id="sel-propietario" required></select>
+      </label>
+      <label>Usuario SAT
+        <select name="id_usuario" id="sel-usuario" required></select>
+      </label>
+    </div>
+
+    <h3>Vigencia</h3>
+    <div class="grid-2">
+      <label>Fecha de emisión
+        <input type="date" name="fecha_emision" required>
+      </label>
+      <label>Fecha de vencimiento
+        <input type="date" name="fecha_vencimiento" required>
+      </label>
+    </div>
+
+    <button type="submit">Registrar tarjeta</button>
+  </form>
+</section>
+
+<!-- =================== NUEVO PROPIETARIO =================== -->
+<section id="nuevo-propietario" class="tab-content">
+  <h2>👤 Registrar nuevo propietario</h2>
+  <form onsubmit="crearPropietario(event)">
+    <div class="grid-2">
+      <label>Nombre completo
+        <input type="text" name="nombre" required maxlength="150" placeholder="Ej: Juan Carlos Pérez López">
+      </label>
+      <label>DPI (13 dígitos)
+        <input type="text" name="dpi" required pattern="\d{13}" maxlength="13" placeholder="2547896301013">
+      </label>
+      <label>Dirección
+        <input type="text" name="direccion" placeholder="Zona 1, Ciudad de Guatemala">
+      </label>
+      <label>Teléfono
+        <input type="text" name="telefono" maxlength="15" placeholder="50123456">
+      </label>
+    </div>
+    <button type="submit">Registrar propietario</button>
+  </form>
+</section>
+
+<!-- =================== NUEVO VEHÍCULO =================== -->
+<section id="nuevo-vehiculo" class="tab-content">
+  <h2>🚙 Registrar nuevo vehículo</h2>
+  <form onsubmit="crearVehiculo(event)">
+    <h3>Datos del vehículo</h3>
+    <div class="grid-2">
+      <label>Número de placa
+        <input type="text" name="numero_placa" required maxlength="10" placeholder="P-123ABC">
+      </label>
+      <label>Tipo de placa
+        <select name="tipo_placa" required>
+          <option value="Particular">Particular</option>
+          <option value="Comercial">Comercial</option>
+          <option value="Mercantil">Mercantil</option>
+          <option value="Oficial">Oficial</option>
+          <option value="Diplomática">Diplomática</option>
+          <option value="Alquiler">Alquiler</option>
+          <option value="Moto">Moto</option>
+          <option value="Remolque">Remolque</option>
+        </select>
+      </label>
+      <label>Año
+        <input type="number" name="anio" required min="1900" max="2100" value="2026">
+      </label>
+      <label>Color
+        <input type="text" name="color" required maxlength="30" placeholder="Blanco">
+      </label>
+      <label>Número de motor
+        <input type="text" name="numero_motor" required maxlength="50" placeholder="MOT-XXX-001">
+      </label>
+      <label>Número de chasis
+        <input type="text" name="numero_chasis" required maxlength="50" placeholder="CHAS-XXX-001">
+      </label>
+      <label>Modelo
+        <select name="id_modelo" id="nv-modelo" required></select>
+      </label>
+      <label>Tipo de uso
+        <select name="id_tipo_uso" id="nv-tipo-uso" required></select>
+      </label>
+    </div>
+
+    <h3>Asignar propietario</h3>
+    <label>Propietario
+      <select name="id_propietario" id="nv-propietario" required></select>
+    </label>
+
+    <button type="submit">Registrar vehículo</button>
+  </form>
+</section>
+
+<!-- =================== NUEVA CALCOMANÍA =================== -->
+<section id="nueva-calcomania" class="tab-content">
+  <h2>🏷️ Registrar nueva calcomanía</h2>
+  <form onsubmit="crearCalcomania(event)">
+    <div class="grid-2">
+      <label>Vehículo
+        <select name="id_vehiculo" id="nc-vehiculo" required></select>
+      </label>
+      <label>Año
+        <input type="number" name="anio" required min="2000" max="2100" value="2026">
+      </label>
+      <label>Estado
+        <select name="estado" required>
+          <option value="VIGENTE">VIGENTE</option>
+          <option value="VENCIDA">VENCIDA</option>
+          <option value="ANULADA">ANULADA</option>
+        </select>
+      </label>
+    </div>
+    <button type="submit">Registrar calcomanía</button>
+  </form>
+</section>
+
+<!-- =================== NUEVA MARCA =================== -->
+<section id="nueva-marca" class="tab-content">
+  <h2>🏷️ Registrar nueva marca</h2>
+  <p style="color:#718096;font-size:0.9rem;margin-bottom:0.75rem;">
+    Registra una marca de vehículo (ej: Volkswagen, BMW, Mercedes-Benz).
+  </p>
+  <form onsubmit="crearMarca(event)">
+    <label>Nombre de la marca
+      <input type="text" name="nombre_marca" required maxlength="50" placeholder="Ej: Volkswagen">
+    </label>
+    <button type="submit">Registrar marca</button>
+  </form>
+</section>
+
+<!-- =================== NUEVO MODELO =================== -->
+<section id="nuevo-modelo" class="tab-content">
+  <h2>🏭 Registrar nuevo modelo</h2>
+  <p style="color:#718096;font-size:0.9rem;margin-bottom:0.75rem;">
+    Puedes seleccionar una marca existente o crear una marca nueva al vuelo.
+  </p>
+
+  <form onsubmit="crearModelo(event)">
+    <h3>Marca</h3>
+    <div class="grid-2">
+      <label>Seleccionar marca existente
+        <select id="nm-marca-existente">
+          <option value="">-- Seleccione --</option>
+        </select>
+      </label>
+      <label>O escribir una nueva marca
+        <input type="text" id="nm-marca-nueva" maxlength="50" placeholder="Ej: Volkswagen">
+      </label>
+    </div>
+
+    <h3>Modelo</h3>
+    <label>Nombre del modelo
+      <input type="text" id="nm-nombre-modelo" required maxlength="50" placeholder="Ej: Jetta">
+    </label>
+
+    <button type="submit">Registrar modelo</button>
+  </form>
+</section>
+
+<!-- =================== MODIFICAR VEHÍCULO =================== -->
+<section id="modificar" class="tab-content">
+  <h2>Modificar información de vehículo</h2>
+  <p>Selecciona un vehículo para editar sus datos básicos.</p>
+  <label>Vehículo:
+    <select id="mod-vehiculo" onchange="cargarVehiculoParaModificar()"></select>
+  </label>
+  <form id="form-modificar" onsubmit="modificarVehiculo(event)" class="hidden">
+    <div class="grid-2">
+      <label>Año <input type="number" name="anio" min="1900" max="2100"></label>
+      <label>Color <input type="text" name="color" maxlength="30"></label>
+      <label>Número de motor <input type="text" name="numero_motor" maxlength="50"></label>
+      <label>Número de chasis <input type="text" name="numero_chasis" maxlength="50"></label>
+      <label>Número de placa <input type="text" name="numero_placa" maxlength="10"></label>
+      <label>Tipo de placa
+        <select name="tipo_placa">
+          <option value="Particular">Particular</option>
+          <option value="Comercial">Comercial</option>
+          <option value="Mercantil">Mercantil</option>
+          <option value="Oficial">Oficial</option>
+          <option value="Diplomática">Diplomática</option>
+          <option value="Alquiler">Alquiler</option>
+          <option value="Moto">Moto</option>
+          <option value="Remolque">Remolque</option>
+        </select>
+      </label>
+    </div>
+    <button type="submit">Guardar cambios</button>
+  </form>
+</section>
+
+<!-- =================== CAMBIO DE COLOR =================== -->
+<section id="cambio-color" class="tab-content">
+  <h2>🎨 Trámite de cambio de color</h2>
+  <form onsubmit="hacerCambioColor(event)">
+    <label>Vehículo
+      <select id="cc-vehiculo" required></select>
+    </label>
+    <label>Color actual <input id="cc-actual" type="text" disabled></label>
+    <label>Color nuevo <input id="cc-nuevo" type="text" required maxlength="30"></label>
+    <label>Observaciones
+      <textarea id="cc-obs" rows="2"></textarea>
+    </label>
+    <button type="submit">Registrar cambio</button>
+  </form>
+</section>
+
+<!-- =================== CAMBIO DE MOTOR =================== -->
+<section id="cambio-motor" class="tab-content">
+  <h2>⚙️ Trámite de cambio de motor</h2>
+  <form onsubmit="hacerCambioMotor(event)">
+    <label>Vehículo
+      <select id="cm-vehiculo" required></select>
+    </label>
+    <label>Motor actual <input id="cm-actual" type="text" disabled></label>
+    <label>Motor nuevo <input id="cm-nuevo" type="text" required maxlength="50"></label>
+    <label>Observaciones
+      <textarea id="cm-obs" rows="2"></textarea>
+    </label>
+    <button type="submit">Registrar cambio</button>
+  </form>
+</section>
+
+<!-- =================== CAMBIO DE DUEÑO =================== -->
+<section id="cambio-dueno" class="tab-content">
+  <h2>👥 Cambio de dueño</h2>
+  <form onsubmit="hacerCambioDueno(event)">
+    <label>Vehículo
+      <select id="cd-vehiculo" required></select>
+    </label>
+    <label>Dueño actual <input id="cd-actual" type="text" disabled></label>
+    <label>Nuevo propietario
+      <select id="cd-nuevo" required></select>
+    </label>
+    <button type="submit">Registrar cambio de dueño</button>
+  </form>
+</section>
+
+<!-- =================== DESACTIVAR =================== -->
+<section id="desactivar" class="tab-content">
+  <h2>🚫 Desactivar tarjeta de circulación</h2>
+  <form onsubmit="hacerDesactivacion(event)">
+    <label>Tarjeta
+      <select id="ds-tarjeta" required></select>
+    </label>
+    <label>Motivo
+      <select id="ds-motivo" required>
+        <option value="vencimiento">Vencimiento</option>
+        <option value="impago">Impago</option>
+        <option value="otro">Otro</option>
+      </select>
+    </label>
+    <label>Observación
+      <textarea id="ds-obs" rows="2"></textarea>
+    </label>
+    <button type="submit">Desactivar tarjeta</button>
+  </form>
+</section>
+
+</main>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
