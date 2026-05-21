@@ -33,7 +33,7 @@ Sistema web de gestión de tarjetas de circulación vehicular desarrollado para 
 
 ```bash
 # 1. Clonar el repositorio
-git clone <url-del-repositorio>
+git clone <https://github.com/Javier-r04/ProyectoFinal_BD1/tree/main>
 cd proyecto_bd1
 
 # 2. Levantar la base de datos con Docker
