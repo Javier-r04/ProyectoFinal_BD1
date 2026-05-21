@@ -1,5 +1,6 @@
 # Proyecto Final - Base de Datos I
 ## Sistema de Tarjetas de Circulación Vehicular (SAT - Guatemala)
+
 Aplicación cliente-servidor que simula el sistema de tarjetas de circulación
 vehicular de la SAT de Guatemala. Permite consultar, registrar, modificar
 y desactivar tarjetas, así como llevar el control de cambios de dueño,
